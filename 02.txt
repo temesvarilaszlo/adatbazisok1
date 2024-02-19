@@ -1,0 +1,50 @@
+Relalg
+-- 1 π gy σ n='Micimackó' Sz
+-- 2 π gy Sz - π gy σ n='Micimackó' Sz
+-- 3 π gy σ n!='Micimackó' Sz
+-- 3 π gy (Sz - σ n='Micimackó' Sz)
+-- 4 π n Sz - π n (π n Sz x π gy σ n='Micimackó' Sz - Sz)
+
+SQL
+-- select distinct gy from Sz where n='Micimackó';
+
+/*select * from (select gy from Sz) as x
+except 
+select * from (select distinct gy from Sz where n='Micimackó') as y;
+
+select gy from Sz except select distinct gy from Sz where n='Micimackó'; 
+
+select distinct gy from Sz where n!='Micimackó';
+
+select distinct gy from (
+select * from Sz 
+except 
+select * from Sz where n='Micimackó') as x;
+*/
+select n from Sz 
+except 
+select n from (
+	select * from (select n from Sz) as x cross join (select distinct gy from Sz where n='Micimackó') as y
+	except
+		select * from Sz
+) as z;
+
+Oracle sql
+select distinct gy from Sz where n='Micimackó';
+
+select gy from Sz minus select distinct gy from Sz where n='Micimackó';
+
+select distinct gy from Sz where n!='Micimackó';
+
+select distinct gy from (
+select * from Sz 
+minus 
+select * from Sz where n='Micimackó');
+
+select n from Sz 
+minus 
+select n from (
+	select * from (select n from Sz) cross join (select distinct gy from Sz where n='Micimackó')
+	minus
+		select * from Sz
+);
