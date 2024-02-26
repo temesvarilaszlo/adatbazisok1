@@ -1,0 +1,100 @@
+Reláció:
+
+SZ(N, GY)
+
+ 
+
+Kik szeretnek legalább kétféle gyümölcsöt?
+
+Relalg
+1. π sz1.n σ sz1.n=sz2.n and sz1.gy!=sz2.gy (ρ sz1 Sz x ρ sz2 Sz)
+SQL
+
+select distinct sz1.n from Sz as sz1, Sz as sz2 
+where sz1.n=sz2.n and sz1.gy!=sz2.gy;
+
+ 
+Kik szeretnek legalább 3 féle gyümölcsöt?
+
+Relalg
+π sz1.n σ sz1.n=sz2.n and sz2.n=sz3.n and sz2.gy!=sz3.gy and sz1.gy!=sz2.gy and sz1.gy!=sz3.gy (ρ sz1 Sz x ρ sz2 Sz x ρ sz3 Sz)
+
+SQL
+select distinct sz1.n from Sz as sz1, Sz as sz2, Sz as sz3
+where sz1.n=sz2.n and sz2.n=sz3.n and sz2.gy!=sz3.gy and sz1.gy!=sz2.gy and sz1.gy!=sz3.gy;
+
+Kik szeretnek legfeljebb kétféle gyümölcsöt?
+
+Relalg
+π n Sz - π sz1.n σ sz1.n=sz2.n and sz2.n=sz3.n and sz2.gy!=sz3.gy and sz1.gy!=sz2.gy and sz1.gy!=sz3.gy (ρ sz1 Sz x ρ sz2 Sz x ρ sz3 Sz) 
+
+SQL
+
+ 
+
+Kik szeretnek pontosan kétféle gyümölcsöt?
+
+Relalg
+lega = π sz1.n σ sz1.n=sz2.n and sz1.gy!=sz2.gy (ρ sz1 Sz x ρ sz2 Sz)
+legf = π n Sz - π sz1.n σ sz1.n=sz2.n and sz2.n=sz3.n and sz2.gy!=sz3.gy and sz1.gy!=sz2.gy and sz1.gy!=sz3.gy (ρ sz1 Sz x ρ sz2 Sz x ρ sz3 Sz)
+lega ∩ legf
+
+ 
+
+Kik szeretnek pontosan 3 gyümölcsöt?
+
+ 
+
+ 
+
+Kik mit nem szeretnek?
+Nemszeret = π n Sz x π gy Sz - Sz
+ 
+
+ 
+
+Kik nem szeretnek minden gyümölcsöt?
+π n Nemszeret
+ 
+
+ 
+
+Kik azok, akik minden gyümölcsöt szeretnek?
+π n Sz - π n Nemszeret
+ 
+
+ 
+
+Melyek azok a gyümölcsök, amiket legalább 2-n szeretnek?
+
+Melyek azok a gyümölcsök, amiket legfeljebb 2-n szeretnek?
+
+Melyek azok a gyümölcsök, amiket pontosan 2-n szeretnek?
+
+Melyek azok a gyümölcsök, amit mindenki szeret?
+
+ 
+
+ 
+
+ 
+
+Reláció:
+
+SZ(N, GY, M)
+
+ 
+
+Kik fogyasztják a legtöbb gyümölcsöt?
+
+ 
+
+Kik fogyasztják a legtöbb almát?
+
+ 
+
+Kik fogyasztják a legkevesebb almát? (aki szereti, azok közül)
+
+ 
+
+Legnagyobb értékhez tartozó Gyümölcsök?

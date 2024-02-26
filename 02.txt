@@ -1,3 +1,5 @@
+Sz(Név, gyümölcs)
+
 Relalg
 -- 1 π gy σ n='Micimackó' Sz
 -- 2 π gy Sz - π gy σ n='Micimackó' Sz
@@ -5,6 +7,12 @@ Relalg
 -- 3 π gy (Sz - σ n='Micimackó' Sz)
 -- 4 π n Sz - π n (π n Sz x π gy σ n='Micimackó' Sz - Sz)
 -- 4 Sz ÷ π gy σ n='Micimackó' Sz
+-- 5 π n Sz - π n (Sz - π n Sz x π gy σ n='Micimackó' Sz)
+-- 6 π n Sz - π n (π n Sz x π gy σ n='Micimackó' Sz - Sz) ∩ π n Sz - π n (Sz - π n Sz x π gy σ n='Micimackó' Sz)
+-- 10 π n σ gy='alma' Sz ∩ π n σ gy='dió' Sz
+-- 11 π n σ gy='alma' Sz ∪ π n σ gy='dió' Sz
+-- 11 π n σ gy='alma' or gy='dió' Sz
+-- 12 π n σ gy='alma' Sz - π n σ gy='dió' Sz
 
 SQL
 -- select distinct gy from Sz where n='Micimackó';
@@ -30,6 +38,49 @@ select n from (
 		select * from Sz
 ) as z;
 
+5-ös
+select n from Sz
+except
+select n from (
+	select * from Sz
+	except
+	select * from (select n from Sz) as x
+	cross join 
+	(select distinct gy from Sz where
+	n = 'Micimackó') as y
+) as z;
+
+6-os
+select * from (
+select n from Sz 
+except 
+select n from (
+	select * from (select n from Sz) as x cross join (select distinct gy from Sz where n='Micimackó') as y
+	except
+		select * from Sz
+) as z) as q
+intersect
+(select n from Sz
+except
+select n from (
+	select * from Sz
+	except
+	select * from (select n from Sz) as x
+	cross join 
+	(select distinct gy from Sz where
+	n = 'Micimackó') as y
+) as z);
+
+10
+select distinct n from Sz where gy='alma' intersect select distinct n from Sz where gy='dió';
+
+11
+select distinct n from Sz where gy='alma' union select distinct n from Sz where gy='dió';
+select distinct n from Sz where gy='alma' or gy='dió';
+
+12
+select distinct n from Sz where gy='alma' except select distinct n from Sz where gy='dió';
+
 Oracle sql
 select distinct gy from Sz where n='Micimackó';
 
@@ -48,4 +99,16 @@ select n from (
 	select * from (select n from Sz) cross join (select distinct gy from Sz where n='Micimackó')
 	minus
 		select * from Sz
+);
+
+5-ös
+select n from Sz
+minus
+select n from (
+	select * from Sz
+	minus
+	select * from (select n from Sz)
+	cross join 
+	(select distinct gy from Sz where
+	n = 'Micimackó')
 );
