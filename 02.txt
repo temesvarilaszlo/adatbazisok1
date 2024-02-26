@@ -4,6 +4,7 @@ Relalg
 -- 3 π gy σ n!='Micimackó' Sz
 -- 3 π gy (Sz - σ n='Micimackó' Sz)
 -- 4 π n Sz - π n (π n Sz x π gy σ n='Micimackó' Sz - Sz)
+-- 4 Sz ÷ π gy σ n='Micimackó' Sz
 
 SQL
 -- select distinct gy from Sz where n='Micimackó';
