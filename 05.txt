@@ -1,0 +1,24 @@
+feladat6.pdf
+
+Feladat 1
+
+γ A; AVG(D) → x (σ B >= 2(R x S));
+
+select A, AVG(D) as x from R,S
+where B >= 2
+group by A;
+
+
+π A (σ AV > 10(γ A; AVG(D)→AV(R ⋈ S)))
+
+select A from (
+select A, AVG(D) as AV from R natural join S
+group by A
+having AV > 10)
+as x;
+
+(Oracle)
+
+select A from R natural join S
+group by A
+having AVG(D) > 10);
