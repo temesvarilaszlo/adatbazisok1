@@ -1,0 +1,19 @@
+CREATE TABLE tnev
+	(mezőnév típus [sormegszorítás] [default]
+	[, ...]
+	[tábla megszorítások]
+);
+
+sor: 
+null
+not null
+unique
+primary key
+references
+check()
+
+oszlop:
+unique
+primary key
+foreign key()references()
+check()

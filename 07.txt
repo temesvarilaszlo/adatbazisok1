@@ -1,0 +1,332 @@
+select * from emp;
+select * from sila.emp;
+
+create table semp as select * from sila.emp;
+select * from semp;
+
+create table semp2 as select ename név,sal fizetés from sila.emp;
+select * from semp2;
+
+create table semp3 as select * from sila.emp where job='SALESMAN';
+select * from semp3;
+
+create table semp4 as select * from sila.emp where 1=2;
+select * from semp4;
+
+
+	
+CREATE TABLE [schema_name.]table_name (
+    column_1 data_type [default kif.]  [column_constraints] [,
+    ...]
+    [,table_constraints]
+);
+
+create table minta(
+sorszám number(6) primary key,
+név varchar2(10) unique,
+becenév char(10) null,
+nem char(1) check( nem='F' or upper(nem)='N' or nem='s'),
+szuldat date default sysdate,
+fizetés number(10,2) not null,
+jutalék float,
+check(fizetés>jutalék)
+);
+
+desc minta
+
+
+
+
+
+-- kis péter    nagy péter
+-- kis ádám     nagy ádám
+-- kis null     nagy null
+-- X Y
+-- null péter   null ádám   null null
+
+create table bigyo (
+sorszam number primary key,
+vnev varchar2(20) unique,
+knev varchar2(20) unique
+);
+select * from bigyo;
+
+insert into bigyo values (1,'Kis','Péter');
+
+insert into bigyo values (1,'X','Y');
+
+insert into bigyo values (0,'X','Y');
+
+
+insert into bigyo values (2,'Kis','Ádám');
+
+
+insert into bigyo values (2,'Nagy','Péter');
+
+
+insert into bigyo values (2,'Nagy','Ádám');
+select * from bigyo;
+insert into bigyo values (3,null,'Ádám');
+insert into bigyo values (3,'Kis',null);
+
+insert into bigyo values (3,'Valaki',null);
+
+insert into bigyo values (4,null,'Ferenc');
+
+insert into bigyo values (5,null,null);
+
+insert into bigyo values (6,null,null);
+select * from bigyo;
+
+
+drop table bigyo;
+create table bigyo (
+sorszam number primary key,
+vnev varchar2(20),
+knev varchar2(20),
+unique(vnev,knev)
+);
+select * from bigyo;
+insert into bigyo values (1,'Kis','Péter');
+insert into bigyo values (2,'Kis','Ádám');
+insert into bigyo values (3,'Nagy','Péter');
+insert into bigyo values (4,'Nagy','Ádám');
+
+insert into bigyo values (5,'Nagy','Ádám');
+select * from bigyo;
+insert into bigyo values (6,null,'Ádám');
+insert into bigyo values (7,'Kis',null);
+
+insert into bigyo values (8,'Kis',null);
+
+insert into bigyo values (9,null,null);
+insert into bigyo values (10,null,null);
+select * from bigyo;
+
+drop table bigyo;
+create table bigyo (
+sorszam number,
+vnev varchar2(20),
+knev varchar2(20),
+primary key(vnev,knev)
+);
+select * from bigyo;
+insert into bigyo values (1,'Kis','Péter');
+insert into bigyo values (1,'Kis','Ádám');
+insert into bigyo values (1,'Nagy','Péter');
+insert into bigyo values (1,'Nagy','Ádám');
+select * from bigyo;
+
+insert into bigyo values (2,'Nagy','Ádám');
+select * from bigyo;
+insert into bigyo values (6,null,'Ádám');
+insert into bigyo values (7,'Kis',null);
+insert into bigyo values (9,null,null);
+
+drop table bigyo;
+
+
+drop table qw;
+create table qw(
+a1 integer,
+a2 varchar(10),
+a3 smallint,
+a4 real);
+
+desc qw
+
+select * from sz;
+
+alter table sz add (x number);
+select * from sz;
+
+alter table sz add (y number default 10);
+
+select * from sz;
+alter table sz drop column x;
+alter table sz drop column y;
+
+
+
+/* DML utasítások
+insert, delete, update
+*/
+
+-- values
+insert into sz(n,gy) values ('Nyuszi','káposzta');
+
+select * from sz;
+
+insert into sz(n) values ('Robi');
+select * from sz;
+
+select * from sz2;
+insert into sz2(n,gy) values ('Nyuszi','káposzta');
+select * from sz2;
+
+insert into sz2(gy,n) values ('Nyuszi','káposzta');
+select * from sz2;
+
+insert into sz2(n) values('Robi');
+select * from sz2;
+
+insert into sz2(n,gy) values ('Micimackó',null);
+select * from sz2;
+
+insert into sz2(n) values (null);
+select * from sz2;
+
+
+insert into sz2(n,gy) values (null,null);
+
+
+insert into sz2(gy) values (null);
+select * from sz2;
+
+-- () nélkül
+insert into sz values('Egér');
+
+insert into sz values('Macska','egér');
+select * from sz;
+
+
+-- select
+select * from sz2;
+insert into sz2(n) select ename from emp;
+select * from sz2;
+
+insert into sz2(n) select distinct job from emp where sal>2000;
+select * from sz2;
+
+insert into sz2 select ename ,job from emp where mgr<7700;
+
+select * from sz2;
+
+desc sz
+
+insert into sz(n) values ('köszönöm szépen');
+
+
+insert into sz(n) values ('köszönöm sz');
+select * from sz;
+
+/*
+insert into sz values ('Nyuszi','káposzta'),('Macska','egér');
+
+insert into sz values ('Nyuszi','káposzta');
+insert into sz values ('Macska','egér');
+*/
+
+-- delete from tnév [where felt.] ------------------------------------------------
+
+select * from sz;
+delete from sz where gy='alma';
+select * from sz;
+
+delete sz where n like 'M%';
+select * from sz;
+
+delete sz where n='Micimackó';
+
+delete sz where gy=null;
+select * from sz;
+
+delete sz where gy is null;
+select * from sz;
+
+delete from sz;
+select * from sz;
+
+-- update tnév set mezőnév=kif[,mezőnév=kif ...] [where felt]; ---------------------------
+
+select * from sz2;
+update sz2 set gy='alma' where gy='banán';
+select * from sz2;
+update sz2 set gy='banán' where gy is null;
+select * from sz2;
+
+
+select * from emp;
+
+select sal+comm,sal,comm from emp;
+select sal+nvl(comm,0),sal,comm from emp;
+
+select * from emp;
+update emp set sal=sal+nvl(comm,0),comm=0;
+select * from emp;
+
+-- -------------------------------------------------------------
+select max(sal) from emp;
+select count(sal),count(job),count(mgr),count(*) from emp;
+select max(job) from emp;
+select min(job) from emp;
+select max(hiredate) from emp;
+select min(hiredate) from emp;
+
+-- visszaállítás
+
+DROP TABLE sz;
+CREATE TABLE sz
+    (n          VARCHAR2(15),
+     gy         VARCHAR2(15));
+
+INSERT INTO sz VALUES ('Füles','málna');
+INSERT INTO sz VALUES ('Füles','körte');
+INSERT INTO sz VALUES ('Füles','alma');
+INSERT INTO sz VALUES ('Micimackó','málna');
+INSERT INTO sz VALUES ('Micimackó','körte');
+INSERT INTO sz VALUES ('Micimackó','dió');
+INSERT INTO sz VALUES ('Kanga','körte');
+INSERT INTO sz VALUES ('Nyuszi','eper');
+INSERT INTO sz VALUES ('Malacka','körte');
+INSERT INTO sz VALUES ('Malacka','alma');
+INSERT INTO sz VALUES ('Malacka','eper');
+INSERT INTO sz VALUES ('Malacka','málna');
+INSERT INTO sz VALUES ('Malacka','dió');
+INSERT INTO sz VALUES ('Tigris','körte');
+INSERT INTO sz VALUES ('Tigris','málna');
+
+ALTER SESSION SET NLS_DATE_LANGUAGE = ENGLISH;
+ALTER SESSION SET NLS_DATE_FORMAT ='DD-MON-YYYY';
+drop table emp;
+CREATE TABLE emp
+    (empno               NUMBER(4) NOT NULL,
+     ename               VARCHAR2(10),
+     job                 VARCHAR2(9),
+     mgr                 NUMBER(4) ,
+     hiredate            DATE,
+     sal                 NUMBER(7,2),
+     comm                NUMBER(7,2),
+     deptno              NUMBER(2) NOT NULL);
+
+INSERT INTO emp VALUES (7839,'KING','PRESIDENT',NULL,'17-NOV-1981',5000,NULL,10);
+INSERT INTO emp VALUES (7698,'BLAKE','MANAGER',7839,'1-MAY-1981',2850,NULL,30);
+INSERT INTO emp VALUES (7782,'CLARK','MANAGER',7839,'9-JUN-1981',2450,NULL,10);
+INSERT INTO emp VALUES (7566,'JONES','MANAGER',7839,'2-APR-1981',2975,NULL,20);
+INSERT INTO emp VALUES (7654,'MARTIN','SALESMAN',7698,'28-SEP-1981',1250,1400,30);
+INSERT INTO emp VALUES (7499,'ALLEN','SALESMAN',7698,'20-FEB-1981',1600,300,30);
+INSERT INTO emp VALUES (7844,'TURNER','SALESMAN',7698,'8-SEP-1981',1500,0,30);
+INSERT INTO emp VALUES (7900,'JAMES','CLERK',7698,'3-DEC-1981',950,NULL,30);
+INSERT INTO emp VALUES (7521,'WARD','SALESMAN',7698,'22-FEB-1981',1250,500,30);
+INSERT INTO emp VALUES (7902,'FORD','ANALYST',7566,'3-DEC-1981',3000,NULL,20);
+INSERT INTO emp VALUES (7369,'SMITH','CLERK',7902,'17-DEC-1980',800,NULL,20);
+INSERT INTO emp VALUES (7788,'SCOTT','ANALYST',7566,'09-DEC-1982',3000,NULL,20);
+INSERT INTO emp VALUES (7876,'ADAMS','CLERK',7788,'12-JAN-1983',1100,NULL,20);
+INSERT INTO emp VALUES (7934,'MILLER','CLERK',7782,'23-JAN-1982',1300,NULL,10);
+INSERT INTO emp VALUES (8000,'PROBA','DOLGOZO',NULL,'27-NOV-1980',6000,NULL,50);
+
+ALTER SESSION SET NLS_DATE_LANGUAGE = HUNGARIAN;
+ALTER SESSION SET NLS_DATE_FORMAT ='YYYY-MON-DD';
+
+
+delete sz2;
+drop table semp;
+drop table semp2;
+drop table semp3;
+drop table semp4;
+drop table minta;
+
+drop table bigyo;
+drop table qw;
+
+
