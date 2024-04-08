@@ -17,3 +17,19 @@ unique
 primary key
 foreign key()references()
 check()
+
+INSERT INTO tnev[(mezőlista)] VALUES();
+INSERT INTO tnev[(mezőlista)] allekérdezés;
+
+DELETE FROM tnév [WHERE felt.];
+
+UPDATE tnev SET mezőnév = kif[,...] [WHERE felt.];
+ 
+CREATE [OR REPLACE] nézetnév AS allekérdezés
+
+VIEW
+CREATE [ OR REPLACE ] [ [ NO ] FORCE ] VIEW [ schema.]nameview AS subquery
+   [ (alias [ inline_constraint [ inline_constraint ]... ]
+            | out_of_line_constraint [, alias [ inline_constraint [ inline_constraint ]... ]
+            | out_of_line_constraint
+            ]...

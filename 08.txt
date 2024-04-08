@@ -1,0 +1,259 @@
+/*
+VIEW
+CREATE [ OR REPLACE ] [ [ NO ] FORCE ] VIEW [ schema.]nameview AS subquery
+   [ (alias [ inline_constraint [ inline_constraint ]... ]
+            | out_of_line_constraint [, alias [ inline_constraint [ inline_constraint ]... ]
+            | out_of_line_constraint
+            ]...
+*/
+select * from sz;
+
+
+create view nevek as select n from sz;
+select * from nevek;
+
+CREATE OR REPLACE VIEW NEVEK  AS select n from sz;
+select * from nevek;
+
+
+create view nevek2 as select distinct n from sz;
+select * from nevek2;
+
+
+create view sszeret as select * from sila.szeret;
+select * from sszeret;
+
+
+create view almatszeretok as select * from sz where gy='alma'; 
+select * from almatszeretok;
+select * from sz where gy='alma';
+
+-- ------------------------------------------
+
+insert into nevek values ('Micimackó');
+select * from nevek;
+
+select * from sz;
+
+
+insert into nevek2 values ('Tigris');
+
+insert into nevek2 values ('Zelefánt');
+select * from nevek2;
+
+select * from sszeret;
+insert into sszeret values('Zelefánt','banán');
+select * from sszeret;
+
+insert into almatszeretok values ('Egér','alma');
+select * from almatszeretok;
+
+insert into almatszeretok values ('Macska','egér');
+select * from sz;
+select * from almatszeretok;
+
+select * from emp;
+
+create view fizetesek as select ename,sal from emp;
+select * from fizetesek;
+insert into fizetesek values('Valaki',7000);
+
+select * from emp;
+desc emp;
+
+create view fizetesmunkahely as select empno,ename,sal,deptno from emp;
+select * from fizetesmunkahely;
+insert into fizetesmunkahely values(1000,'Valaki',7000,60);
+select * from fizetesmunkahely;
+select * from emp;
+
+
+create view kereset as select empno,ename,sal+nvl(comm,0) összeg,deptno  from emp;
+select * from kereset;
+insert into kereset values(1000,'Valaki',10000,50);
+
+
+
+select * from emp natural join dept;
+create view nevmunkahely as select deptno,empno,ename,loc from emp natural join dept;
+select * from nevmunkahely;
+
+insert into nevmunkahely values(10,1000,'Valaki','Bp.');
+
+select * from nevek2;
+
+select * from nevek2 natural join dept;
+
+
+select * from (select distinct n from sz) natural join dept;
+
+
+-- drop view nézetnév;
+
+commit;
+
+select * from sz2;
+insert into sz2 values ('a','b');
+select * from sz2;
+commit;
+select * from sz2;
+insert into sz2 select ename,job from emp;
+select * from sz2;
+rollback;
+select * from sz2;
+
+
+savepoint snév;
+rollback to SAVEPOINT snév;
+
+-- --------------------------------------------------------------------------------------------
+
+select * from user_objects;
+
+----------------------------------------
+select * from emp;
+
+select level szint,empno,ename,mgr from emp
+connect by mgr = prior empno
+start with job='PRESIDENT';
+
+/*
+                                                           KING
+                           JONES                            BLAKE                                   CLARK
+                   SCOTT            FORD            ALLEN    WARD  MARTIN  TURÍNER   JAMES          MILLER
+                ADAMS            SMITH
+*/
+
+
+
+
+select level szint,empno,ename,mgr from emp
+connect by prior mgr = empno
+start with ename='ADAMS';
+
+
+
+
+
+select level szint,empno,ename,mgr from emp
+connect by prior mgr = empno
+start with ename='FORD';
+
+
+select level szint,empno,ename,mgr from emp
+connect by mgr = prior empno
+start with ename='JONES';
+
+
+
+select * from emp;
+select level szint,empno,ename,mgr from emp
+connect by mgr = prior empno
+start with job='MANAGER';
+
+
+
+
+
+Adjuk meg az ORAUSER.VAGYONOK tábla alapján KAIN unokáinak az össz-vagyonát.
+
+SELECT * FROM orauser.vagyonok;
+
+SELECT level,lpad(' ',4*(level-1))|| nev,vagyon
+FROM orauser.vagyonok
+START WITH  nev='KAIN'
+CONNECT BY PRIOR nev = apja;
+
+
+SELECT nev, vagyon ---sum(vagyon)-- lpad(' ',4*(level-1))|| nev,vagyon
+FROM orauser.vagyonok
+where level=3
+START WITH  nev='KAIN'
+CONNECT BY PRIOR nev = apja;
+
+
+
+SELECT level,vagyonok.*
+FROM orauser.vagyonok
+START WITH  nev='KAIN'
+CONNECT BY PRIOR nev = apja;
+sum(vagyon)
+
+SELECT sum(vagyon)
+FROM orauser.vagyonok
+where level=3
+START WITH  nev='KAIN'
+CONNECT BY PRIOR nev = apja;
+-- ------------------------------------------
+-- visszaállítás ---------------------------------------------------------------
+
+DROP TABLE sz;
+CREATE TABLE sz
+    (n          VARCHAR2(15),
+     gy         VARCHAR2(15));
+
+INSERT INTO sz VALUES ('Füles','málna');
+INSERT INTO sz VALUES ('Füles','körte');
+INSERT INTO sz VALUES ('Füles','alma');
+INSERT INTO sz VALUES ('Micimackó','málna');
+INSERT INTO sz VALUES ('Micimackó','körte');
+INSERT INTO sz VALUES ('Micimackó','dió');
+INSERT INTO sz VALUES ('Kanga','körte');
+INSERT INTO sz VALUES ('Nyuszi','eper');
+INSERT INTO sz VALUES ('Malacka','körte');
+INSERT INTO sz VALUES ('Malacka','alma');
+INSERT INTO sz VALUES ('Malacka','eper');
+INSERT INTO sz VALUES ('Malacka','málna');
+INSERT INTO sz VALUES ('Malacka','dió');
+INSERT INTO sz VALUES ('Tigris','körte');
+INSERT INTO sz VALUES ('Tigris','málna');
+
+ALTER SESSION SET NLS_DATE_LANGUAGE = ENGLISH;
+ALTER SESSION SET NLS_DATE_FORMAT ='DD-MON-YYYY';
+drop table emp;
+CREATE TABLE emp
+    (empno               NUMBER(4) PRIMARY key,
+     ename               VARCHAR2(10),
+     job                 VARCHAR2(9),
+     mgr                 NUMBER(4) ,
+     hiredate            DATE,
+     sal                 NUMBER(7,2),
+     comm                NUMBER(7,2),
+     deptno              NUMBER(2) NOT NULL);
+
+INSERT INTO emp VALUES (7839,'KING','PRESIDENT',NULL,'17-NOV-1981',5000,NULL,10);
+INSERT INTO emp VALUES (7698,'BLAKE','MANAGER',7839,'1-MAY-1981',2850,NULL,30);
+INSERT INTO emp VALUES (7782,'CLARK','MANAGER',7839,'9-JUN-1981',2450,NULL,10);
+INSERT INTO emp VALUES (7566,'JONES','MANAGER',7839,'2-APR-1981',2975,NULL,20);
+INSERT INTO emp VALUES (7654,'MARTIN','SALESMAN',7698,'28-SEP-1981',1250,1400,30);
+INSERT INTO emp VALUES (7499,'ALLEN','SALESMAN',7698,'20-FEB-1981',1600,300,30);
+INSERT INTO emp VALUES (7844,'TURNER','SALESMAN',7698,'8-SEP-1981',1500,0,30);
+INSERT INTO emp VALUES (7900,'JAMES','CLERK',7698,'3-DEC-1981',950,NULL,30);
+INSERT INTO emp VALUES (7521,'WARD','SALESMAN',7698,'22-FEB-1981',1250,500,30);
+INSERT INTO emp VALUES (7902,'FORD','ANALYST',7566,'3-DEC-1981',3000,NULL,20);
+INSERT INTO emp VALUES (7369,'SMITH','CLERK',7902,'17-DEC-1980',800,NULL,20);
+INSERT INTO emp VALUES (7788,'SCOTT','ANALYST',7566,'09-DEC-1982',3000,NULL,20);
+INSERT INTO emp VALUES (7876,'ADAMS','CLERK',7788,'12-JAN-1983',1100,NULL,20);
+INSERT INTO emp VALUES (7934,'MILLER','CLERK',7782,'23-JAN-1982',1300,NULL,10);
+INSERT INTO emp VALUES (8000,'PROBA','DOLGOZO',NULL,'27-NOV-1980',6000,NULL,50);
+
+ALTER SESSION SET NLS_DATE_LANGUAGE = HUNGARIAN;
+ALTER SESSION SET NLS_DATE_FORMAT ='YYYY-MON-DD';
+
+
+delete sz2;
+drop table sszeret;
+drop view nevek;
+drop view nevek2;
+drop view almatszeretok;
+drop view fizetesek;
+drop view fizetesmunkahely;
+drop view kereset;
+drop view nevmunkahely;
+
+
+
+-- create table sz2 (n varchar(15),gy  varchar(15) default 'banán');
+select * from dba_views where owner='BRANYI';
+
+select * from dba_views order by 3 desc;

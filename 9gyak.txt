@@ -1,0 +1,281 @@
+select * from sz;
+
+
+
+
+select * from &a;
+
+
+select * from &&a;
+
+
+select * from &b;
+
+select * from &&b;
+
+
+select * from &valtozo;
+
+
+select &c*2 from dual;
+
+select &&c*2 from dual;
+
+
+define
+
+
+undefine a
+
+def
+
+undef b
+undef c
+def
+
+def a="sz"
+def
+select * from &a;
+
+
+select * from &&a;
+def a="emp"
+def
+
+define _editor="notepad++"
+def
+
+undef a
+
+
+select * from &a;
+def
+
+select &a_negyzet_oldala *4 kerület from dual;
+
+select &&a_negyzet_oldala *4 kerület from dual;
+
+
+-- ---------------------------------------------------
+/*
+ACC[EPT] variable 
+[NUM[BER] | CHAR | DATE | BINARY_FLOAT | BINARY_DOUBLE] [FOR[MAT] format] [DEF[AULT] default] 
+[PROMPT text|NOPR[OMPT]] [HIDE]
+*/
+
+
+
+select * from &&a;
+def
+accept a
+def
+select &&a *4 kerület from dual;
+
+
+
+accept b prompt 'kérem a tábla nevét'
+def
+select * from &b;
+select * from &&b;
+
+accept b prompt 'kérem a tábla nevét' hide
+select * from &b;
+def
+
+
+select &a from dual;
+accept a  -- pizza
+def
+select &a from dual;  -- select pizza from dual;
+select pizza from dual;
+select 'pizza' from dual;
+
+select '&a' from dual;
+
+
+select * from &a;  -- select * from pizza;
+select * from '&a'; -- hibás
+select * from 'pizza';
+
+accept a
+
+select '&a'*3 from dual;
+def
+select &a*3 from dual;
+
+
+host
+-- ttitle left 'Urgent: ' &&2 ' Days High: ' &days
+--------------------------------------------------------------
+/*
+VAR[IABLE] [variable [type] ]
+NUMBER  CHAR  CHAR(n [CHAR | BYTE])  NCHAR  NCHAR(n)  VARCHAR2(n [CHAR | BYTE])  NVARCHAR2(n)
+BLOB  BFILE  CLOB  NCLOB  REFCURSOR  BINARY_FLOAT  BINARY_DOUBLE
+*/
+
+variable
+variable a char
+var x char(5)
+var y number
+var z varchar2(10)
+
+var
+
+
+begin
+:a := '1';
+:x := 'hello';
+:y := 5;
+:y := :y +1;
+:z := 'szia';
+end;
+/
+print a
+print x
+print y
+print z
+
+
+-- III PL/SQL
+
+
+-- 3 féle változó
+/*
+
+&x  &&x
+
+:x
+
+x
+
+*/
+
+
+--
+remark megjegyzés
+rem megjegyzés
+/*
+gdsfggsdfgds
+gdsfgsdfgsdf
+*/
+
+select * from dual; -- magyarázat
+
+/
+-- boolean,%type,%rowtype
+
+
+select * from sz;
+select * from emp;
+
+declare
+nev sz.n%type;                                  --  nev:='Valaki';    x:=y;
+y varchar2(10);
+x y%type;
+
+z       emp%rowtype;
+munkas  emp%rowtype; -- munkas.empno,munkas.deptno,munkas.ename...  munkas:=z;      munkas.ename='Valaki';munkas.empno=1000;
+begin
+
+end;
+-- -----------------------------------------------------------------------------
+-- PL/SQL Blokk szerkezet
+
+[<<blokknév>>]
+[DECLARE
+  deklarációk]
+BEGIN 
+  utasítás[(ok)] 
+  [RETURN;]
+ 
+[EXCEPTION 
+    kivételkezelő]
+END [blokknév];
+
+
+/* Deklarációs rész (DECLARE): 
+lokális típusok, változók, nevesített konstansok, kivételek, kurzorok definiálása tetszőleges sorrendben,
+legvégül a lokális alprogramok definiálása.
+
+Eljárás rész:
+BEGIN és END között az algoritmust leíró végrehajtható utasításokat tartalmazza.
+
+Kivételkezelő rész (EXCEPTION):
+opcionális, a deklarációs vagy eljárás részben kiváltódott kivételek (hibák) lekezelésére szolgál.
+*/
+
+<<elso>>
+begin
+
+end;
+
+<<masodik>>
+begin
+
+end;
+
+----------------------------------------------------------------------------------------
+/
+<<elso>>
+begin
+
+
+end;
+/
+<<masodik>>
+begin
+
+end;
+/
+----------------------------------------------------------------------------------------
+begin
+    <<elso>>
+    begin
+
+
+    end;
+
+    <<masodik>>
+    begin
+
+    end;
+end;
+/
+
+dbms_output.put( );
+dbms_output.put_line( );
+dbms_output.new_line;
+
+
+
+begin
+dbms_output.put_line('szia');
+end;
+/
+
+
+
+
+
+set serveroutput on
+begin
+dbms_output.put_line('szia');
+end;
+/
+
+
+begin
+dbms_output.put('SZ');
+dbms_output.put_line('ia');
+end;
+/
+
+
+
+begin
+dbms_output.put('SZ');
+dbms_output.new_line;
+dbms_output.put_line('ia');
+end;
+/
+
