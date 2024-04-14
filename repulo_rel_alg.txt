@@ -1,0 +1,42 @@
+Mely két város között közlekedik az a járat, amelyre a legdrágább a másodosztályú jegy?
+
+π honkod, hovkod (jaratok ⨝ arak - π j1.* σ j1.masod < j2.masod (ρ j1 jaratok ⨝ arak x ρ j2 jaratok ⨝ arak))
+
+select honkod, hovkod from
+(select * from jaratok natural join arak
+minus
+select j1.* from
+(select * from jaratok natural join arak) j1
+cross join
+(select * from jaratok natural join arak) j2
+where j1.masod < j2.masod)
+;
+
+Mely városokban van csak egy repülőtér?
+
+π varos (π varos, kod Repter - π r1.varos, r1.kod σ r1.varos = r2.varos and r1.kod != r2.kod (ρ r1 Repter x ρ r2 Repter))
+
+select varos from (
+select * from repter
+minus
+select r1.* from (
+(select * from repter) r1
+cross join
+(select * from repter) r2
+)
+where r1.varos = r2.varos and r1.kod != r2.kod
+);
+
+Hány városba nem érkezik egy járat se?
+
+select * from (
+select varos from repter
+minus
+select * from
+(select varos from repter r join jaratok j on (r.kod = j.hovkod))
+);
+
+Mely járatok közlekednek szombaton és vasárnap is?
+
+select * from jaratok
+where napok like '%11';

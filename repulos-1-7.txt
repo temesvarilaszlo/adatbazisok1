@@ -1,0 +1,76 @@
+--1. feladat
+select count(azon) from jaratok;
+
+--2. feladat
+
+CREATE VIEW JaratokNezet AS
+SELECT j.AZON AS "JaratSzam",
+       rp1.VAROS AS "KiinduloVaros",
+       rp2.VAROS AS "CelVaros"
+FROM JARATOK j
+JOIN REPTER rp1 ON j.HONKOD = rp1.KOD
+JOIN REPTER rp2 ON j.HOVKOD = rp2.KOD;
+
+
+--3. feladat
+  
+UPDATE ARAK ar
+SET ar.ELSO = ar.ELSO * 0.9,
+    ar.MASOD = ar.MASOD * 0.8
+WHERE EXISTS (
+  SELECT 1
+  FROM JARATOK j
+  WHERE j.AZON = ar.AZON
+    AND (TO_DATE(j.ERKEZES, 'HH24MI') - TO_DATE(j.INDULAS, 'HH24MI')) * 24 < 3
+    AND TO_NUMBER(SUBSTR(j.INDULAS, 1, 2)) BETWEEN 0 AND 23
+    AND TO_NUMBER(SUBSTR(j.ERKEZES, 1, 2)) BETWEEN 0 AND 23);
+
+-- 4. feladat
+
+CREATE VIEW JARATOK_LEGALABB_OT_NAP AS
+SELECT AZON, INDULAS, ERKEZES, NAPOK
+FROM JARATOK
+WHERE LENGTH(REPLACE(NAPOK, '0', '')) >= 5;
+
+--5. feladat
+
+SELECT 
+    r1.VAROS AS "InduloVaros", 
+    r2.VAROS AS "CelVaros"
+FROM 
+    ARAK a
+JOIN 
+    JARATOK j ON a.AZON = j.AZON
+JOIN 
+    REPTER r1 ON j.HONKOD = r1.KOD
+JOIN 
+    REPTER r2 ON j.HOVKOD = r2.KOD
+WHERE 
+    a.MASOD = (SELECT MAX(MASOD) FROM ARAK);
+
+--6. feladat
+
+SELECT VAROS
+FROM REPTER
+GROUP BY VAROS
+HAVING COUNT(*) = 1;
+
+--7. feladat
+
+SELECT COUNT(*)
+FROM REPTER r
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM JARATOK j
+    WHERE j.HOVKOD = r.KOD
+);
+
+(szerintem ez a jó)
+
+select * from (
+select varos from repter
+minus
+select * from
+(select varos from repter r join jaratok j on (r.kod = j.hovkod))
+);
+
