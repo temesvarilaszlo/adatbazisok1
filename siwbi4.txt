@@ -1,0 +1,129 @@
+drop table igenyles;
+drop table ugyfel;
+drop table autok;
+drop table kolcsonzes;
+
+create table igenyles as select * from branyi.igenyles;
+create table ugyfel as select * from branyi.ugyfel;
+create table autok as select * from branyi.autok;
+create table kolcsonzes as select * from branyi.kolcsonzes;
+
+select * from igenyles;
+select * from ugyfel;
+select * from autok;
+select * from kolcsonzes;
+
+
+--1.)
+
+create or replace procedure kolcson is
+cursor cursor_igeny is (select * from igenyles);
+szig_count integer := 0;
+rendsz_count integer := 0;
+auto_row autok%rowtype;
+begin
+    for curr_igenyles in cursor_igeny loop
+        dbms_output.put_line('igyenles feldolgozasa: ' || 'szig: ' || curr_igenyles.szigszam || ', rendsz: ' || curr_igenyles.rendszam );
+        
+        --a.)
+        
+        select count(*) into szig_count from ugyfel where szigszam = curr_igenyles.szigszam;
+        select count(*) into rendsz_count from autok where rendszam = curr_igenyles.rendszam;
+        
+        if szig_count = 0 then
+            dbms_output.put_line('A szigszam nem talalhato!');
+            continue;
+        end if;
+        
+        if rendsz_count = 0 then
+             dbms_output.put_line('A rendszam nem talalhato!');
+            continue;
+        end if;
+        
+        --b.)
+        select * into auto_row from autok where rendszam = curr_igenyles.rendszam;
+
+        if auto_row.kölcsönözve = 'i' then
+        dbms_output.put_line('Az auto ki van kolcsonozve!');
+        else
+        --c.)
+        insert into kolcsonzes values (curr_igenyles.szigszam, curr_igenyles.rendszam, sysdate, null);
+        update autok set kölcsönözve = 'i' where rendszam = curr_igenyles.rendszam;
+        dbms_output.put_line('Kolcsonzes megtortent!');
+        end if;
+    
+    end loop;
+end;
+/
+
+set serveroutput on
+execute kolcson;
+/
+
+--select * from igenyles;
+--select * from ugyfel;
+--select * from autok;
+--select * from kolcsonzes;
+--select * from autok where rendszam = 'ABC123';
+
+
+--2.)
+
+create or replace function kolcs_autok(szig varchar) return varchar is
+cursor auto_kolcs is (select * from kolcsonzes where szigszam = szig);
+rendszamok varchar(1000) := '';
+begin
+    for curr_kolcs in auto_kolcs loop
+       rendszamok := rendszamok || curr_kolcs.rendszam || ', '; 
+    end loop;
+    return rendszamok;
+end;
+/
+
+set serveroutput on
+select kolcs_autok('AE555555') from dual;
+
+--select * from kolcsonzes;
+
+--3.)
+
+create or replace procedure minden_ot is
+cursor cur_ugyfel is select * from ugyfel order by nev;
+ugyfel_index integer := 0;
+begin
+    for current_ugyfel in cur_ugyfel loop
+    ugyfel_index := ugyfel_index + 1;
+    if mod(ugyfel_index, 5) = 0 then
+         dbms_output.put_line(current_ugyfel.nev);
+    end if;
+    end loop;
+end;
+/
+
+set serveroutput on
+execute minden_ot;
+
+--select * from ugyfel order by nev;
+
+--4.)
+create or replace function hanyszor(p1 varchar, p2 varchar) return integer is
+    counter integer := 0;
+    position integer := 1;
+begin
+    while position > 0 loop
+        position := instr(p1, p2, position);
+        
+        if position > 0 then
+            counter := counter + 1;
+            position := position + length(p2);
+        end if;
+    end loop;
+    
+    return counter;
+end;
+/
+
+set serveroutput on
+select hanyszor('ab c ab ab de abab fg', 'ab') as hanyszor from dual;
+select hanyszor('aaaaaaa', 'a') as hanyszor from dual;
+select hanyszor('abaaababaa', 'bab') as hanyszor from dual;
