@@ -43,12 +43,12 @@ begin
         --b.)
         select * into auto_row from autok where rendszam = curr_igenyles.rendszam;
 
-        if auto_row.kölcsönözve = 'i' then
+        if auto_row.kÃ¶lcsÃ¶nÃ¶zve = 'i' then
         dbms_output.put_line('Az auto ki van kolcsonozve!');
         else
         --c.)
         insert into kolcsonzes values (curr_igenyles.szigszam, curr_igenyles.rendszam, sysdate, null);
-        update autok set kölcsönözve = 'i' where rendszam = curr_igenyles.rendszam;
+        update autok set kÃ¶lcsÃ¶nÃ¶zve = 'i' where rendszam = curr_igenyles.rendszam;
         dbms_output.put_line('Kolcsonzes megtortent!');
         end if;
     
